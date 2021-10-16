@@ -28,7 +28,6 @@ const getPokemonsByIdOrName = async (idOrName) => {
 
 function showPokemonData(recievedData) {
   //Get user data and shows it in the dom
-  pokeImg.src = recievedData.sprites.front_default;
   pokeNameVal.innerText = ` ${recievedData.name}`;
   pokeHeightVal.innerText = ` ${recievedData.height} cm`;
   pokeWeightVal.innerText = ` ${recievedData.weight} grams`;
@@ -37,6 +36,7 @@ function showPokemonData(recievedData) {
 
 function changeToBackDefaultOnHover(recievedData) {
   //Make the image change to back_default on hover
+  pokeImg.src = recievedData.sprites.front_default;
   pokeImg.addEventListener("mouseenter", () => {
     pokeImg.src = recievedData.sprites.back_default;
   });
