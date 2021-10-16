@@ -28,8 +28,8 @@ img {
 
 .newType:hover {
   cursor: pointer;
-  background: #434343;
-  border-radius: 24px;
+  background: #e4ddddbd;
+  border-radius: 13px;
 }
 
 .new-poke-by-type {

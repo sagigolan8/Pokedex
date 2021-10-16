@@ -7,7 +7,7 @@ button.addEventListener("click", () => {
 });
 userText.addEventListener("keydown", (e) => {
   //When the user press enter in the input box the wanted pokemon shows up
-  if (e.key === "Enter") getPokemonsByIdOrName(userText.value);
+  if (e.key === "Enter") getPokemonsByIdOrName(userText.value.toLowerCase());
 });
 
 const getPokemonsByIdOrName = async (idOrName) => {
@@ -33,17 +33,17 @@ function showPokemonData(recievedData) {
   pokeWeightVal.innerText = ` ${recievedData.weight} grams`;
   addSpan(recievedData);
 }
-
 function changeToBackDefaultOnHover(recievedData) {
   //Make the image change to back_default on hover
   pokeImg.src = recievedData.sprites.front_default;
-  pokeImg.addEventListener("mouseenter", () => {
+  pokeImg.onmouseenter = function () {
     pokeImg.src = recievedData.sprites.back_default;
-  });
-  pokeImg.addEventListener("mouseout", () => {
+  };
+  pokeImg.onmouseout = function () {
     pokeImg.src = recievedData.sprites.front_default;
-  });
+  };
 }
+
 function removePreviousTypesFromDom(cls) {
   //Remove the old types of the previous pokemon from dom
   for (const newType of document.querySelectorAll(cls)) {
@@ -70,8 +70,10 @@ function getType() {
       .getElementById("related-pokemons")
       .addEventListener("click", (e) => {
         e.stopImmediatePropagation();
+        userText.value = e.target.textContent;
         getPokemonsByIdOrName(e.target.textContent);
       });
+    window.scrollTo(0, 300);
   });
 }
 
@@ -80,7 +82,7 @@ function addSpan(recievedData) {
   for (let i = 0; i < recievedData.types.length; i++) {
     const newSpan = document.createElement("span");
     newSpan.classList.add("newType");
-    newSpan.textContent = `| ${recievedData.types[i].type.name} | `;
+    newSpan.innerHTML = ` ${recievedData.types[i].type.name}</br> `;
     pokeTypesVal.append(newSpan);
   }
 }
