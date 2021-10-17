@@ -37,5 +37,5 @@ Use axios to fetch the pokeAPI.
 - ✔ Add design and features of your choice:
 
 - Responsive web design.
-- Auto scroll when the use clicks on pokemon type.
+- Auto scroll when the user clicks on pokemon type.
 - User allowd to search some pokemon by pressing "Enter" in the search bar.
