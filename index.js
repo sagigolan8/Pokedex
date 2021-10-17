@@ -3,7 +3,7 @@ const baseUrl = "https://pokeapi.co/api/v2";
 const userText = document.getElementById("search");
 button.addEventListener("click", () => {
   //When the user clicks on the button the wanted pokemon shows up
-  getPokemonsByIdOrName(userText.value);
+  getPokemonsByIdOrName(userText.value.toLowerCase());
 });
 userText.addEventListener("keydown", (e) => {
   //When the user press enter in the input box the wanted pokemon shows up
