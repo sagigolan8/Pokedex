@@ -17,16 +17,10 @@ const getPokemonsByIdOrName = async (idOrName) => {
     removePreviousTypesFromDom(".newType");
     removePreviousTypesFromDom(".new-poke-by-type");
     let response  
-    if(!isNaN(idOrName)){ //Check this out https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number#:~:text=input-,!isnan(input),-or
+    if(!isNaN(idOrName))
     response = await axios.get(`${baseUrl}/pokemon/get/${idOrName}`);
-  console.log('number!!!!!');
-  }
-    else{ 
+    else 
     response = await axios.get(`${baseUrl}/pokemon/query?name=${idOrName}`);
-  console.log('string!!!!!'); 
-
-  }
-
   const recievedData = response.data;
     changeToBackDefaultOnHover(recievedData);
     showPokemonData(recievedData);
