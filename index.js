@@ -1,4 +1,5 @@
-const baseUrl = "https://pokeapi.co/api/v2";
+const realUrl = "https://pokeapi.co/api/v2";
+const baseUrl = "http://localhost:8080";
 
 const userText = document.getElementById("search");
 button.addEventListener("click", () => {
@@ -15,16 +16,39 @@ const getPokemonsByIdOrName = async (idOrName) => {
   try {
     removePreviousTypesFromDom(".newType");
     removePreviousTypesFromDom(".new-poke-by-type");
-    const response = await axios.get(`${baseUrl}/pokemon/${idOrName}`);
-    const recievedData = response.data;
+    let response  
+    if(!isNaN(idOrName)){ //Check this out https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number#:~:text=input-,!isnan(input),-or
+    response = await axios.get(`${baseUrl}/pokemon/get/${idOrName}`);
+  console.log('number!!!!!');
+  }
+    else{ 
+    response = await axios.get(`${baseUrl}/pokemon/query?name=${idOrName}`);
+  console.log('string!!!!!'); 
+
+  }
+
+  const recievedData = response.data;
     changeToBackDefaultOnHover(recievedData);
     showPokemonData(recievedData);
     getType();
   } catch (error) {
+    // coolAlert()
     alert("hey bud this pokemon doesn't exist.... try another one");
     console.error(error);
   }
-};
+};  
+
+
+
+
+// function coolAlert(){
+//   Swal.fire({
+//     icon: 'error',
+//     title: 'Oops...',
+//     text: 'Something went wrong!',
+//     footer: '<a href="">Why do I have this issue?</a>'
+//   })
+// }
 
 function showPokemonData(recievedData) {
   //Get user data and shows it in the dom
@@ -35,12 +59,12 @@ function showPokemonData(recievedData) {
 }
 function changeToBackDefaultOnHover(recievedData) {
   //Make the image change to back_default on hover
-  pokeImg.src = recievedData.sprites.front_default;
+  pokeImg.src = recievedData.front_pic;
   pokeImg.onmouseenter = function () {
-    pokeImg.src = recievedData.sprites.back_default;
+    pokeImg.src = recievedData.back_pic;
   };
   pokeImg.onmouseout = function () {
-    pokeImg.src = recievedData.sprites.front_default;
+    pokeImg.src = recievedData.front_pic;
   };
 }
 
@@ -98,3 +122,18 @@ function renderPokemonsToDom(pokemons) {
     document.getElementById("related-pokemons").append(newList);
   });
 }
+
+const catchAndRelease = catchRelease.onclick = ()=>{
+  
+}
+
+
+const userNameVal = userName.value
+
+const userClick = userButton.onclick = async ()=>{
+  const response = await axios.put(`${baseUrl}/pokemon/ditto`)
+  const recievedData = response.data;
+  console.log(recievedData);
+}
+
+
