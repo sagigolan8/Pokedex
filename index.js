@@ -1,4 +1,3 @@
-// const realUrl = "https://pokeapi.co/api/v2";
 const baseUrl = "http://localhost:8080";
 
 const userText = document.getElementById("search");
@@ -20,9 +19,8 @@ const getPokemonsByIdOrName = async (idOrName) => {
     removePreviousTypesFromDom(".newType");
     removePreviousTypesFromDom(".new-poke-by-type");
     const response = await getPokemonByNameOrId(idOrName)
-    const recievedData = response.data;
-    changeToBackDefaultOnHover(recievedData);
-    showPokemonData(recievedData);
+    changeToBackDefaultOnHover(response);
+    showPokemonData(response);
     getType();
   } catch (error) {
     // coolAlert()
@@ -35,24 +33,18 @@ const getPokemonsByIdOrName = async (idOrName) => {
     async function getPokemonByNameOrId(idOrName){
       let response  
       if(!isNaN(idOrName))
-      response = await axios.get(`${baseUrl}/pokemon/get/${idOrName}`);
+      // response = await axios.get(`${baseUrl}/pokemon/get/${idOrName}`);
+      response = await axiosRequest('get',`pokemon/get/${idOrName}`,'a');
       else 
-      response = await axios.get(`${baseUrl}/pokemon/query?name=${idOrName}`);
+      // response = await axios.get(`${baseUrl}/pokemon/query?name=${idOrName}`);
+      response = await axiosRequest('get',`pokemon/query?name=${idOrName}`,'a');
+      console.log(response);
       return response
     }
 
-// function coolAlert(){
-//   Swal.fire({
-//     icon: 'error',
-//     title: 'Oops...',
-//     text: 'Something went wrong!',
-//     footer: '<a href="">Why do I have this issue?</a>'
-//   })
-// }
 
       function showPokemonData(recievedData) {
         //Get user data and shows it in the dom
-        // console.log(pokeId.className);
         pokeId.textContent = recievedData.id;
         pokeNameVal.textContent = ` ${recievedData.name}`;
         pokeHeightVal.textContent = ` ${recievedData.height} cm`;
@@ -61,6 +53,7 @@ const getPokemonsByIdOrName = async (idOrName) => {
       }
       function changeToBackDefaultOnHover(recievedData) {
         //Make the image change to back_default on hover
+        console.log(recievedData);
         pokeImg.src = recievedData.front_pic;
         pokeImg.onmouseenter = function () {
           pokeImg.src = recievedData.back_pic;
@@ -74,13 +67,6 @@ const getPokemonsByIdOrName = async (idOrName) => {
         //Remove the old types of the previous pokemon from dom
         for (const newType of document.querySelectorAll(cls)) {
           newType.remove();
-        }
-      }
-
-      function removeFromDom(cls) {
-        //Delete some related elements(by tags/class) from dom
-        for (const element of document.querySelectorAll(cls)) {
-          element.remove();
         }
       }
 
@@ -143,16 +129,25 @@ const getPokemonsByIdOrName = async (idOrName) => {
       alert(response)
     }
 
+
+
       releaseButton.onclick = async ()=>{
-        if(document.getElementById('connect').textContent === '')//then you cant release
+        if(document.getElementById('connect').textContent === ''){//then you cant catch
+        alert("you can't catch pokemons if you aren't logged in")
         return
+        }
+        const pokemonId = pokeId.textContent
         const userName =  document.getElementById('connect').textContent.split('').splice(14).join('')
-        const response =  await axiosRequest('put','pokemon/catch/${pokemonName}',userName) 
+        const response =  await axiosRequest('delete',`pokemon/release/${pokemonId}`,userName) 
+        if(!response)
+        alert("you can't release pokemon you didn't caught")
+        else
         alert(response)
         }
 
 
       signInButton.onclick = async ()=>{//for sign up to web
+      window.scrollTo(-500,0);
         const userNameVal = userNameSignIn.value
         if(!userNameVal){
           alert('type something...')
@@ -206,5 +201,4 @@ const getPokemonsByIdOrName = async (idOrName) => {
       alert(response)
       }
 
-
-  
+     
