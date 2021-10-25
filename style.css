@@ -35,13 +35,16 @@ img {
 .new-poke-by-type {
   cursor: pointer;
 }
-.dropdown{
-  text-align: right;
-  /* visibility: hidden; */
-}
-.dropdown-item{
-  cursor: pointer;
-}
+
 #connect{
   font-size: 3rem;
+}
+#showList{
+text-align: right;
+}
+#showUserPokes{
+  font-size: 2rem;
+}
+.listPokes{
+  list-style-type: none;
 }

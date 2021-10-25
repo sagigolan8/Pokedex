@@ -2,14 +2,14 @@ const baseUrl = "http://localhost:8080";
 
 const userText = document.getElementById("search");
 button.addEventListener("click", () => {
-  window.scrollTo(0, 300);
+  window.scrollTo(0, 250);
   //When the user clicks on the button the wanted pokemon shows up
   getPokemonsByIdOrName(userText.value.toLowerCase());
 });
 userText.addEventListener("keydown", (e) => {
   //When the user press enter in the input box the wanted pokemon shows up
   if (e.key === "Enter"){ getPokemonsByIdOrName(userText.value.toLowerCase());
-    window.scrollTo(0, 300);
+    window.scrollTo(0, 250);
   }
 });
 
@@ -23,8 +23,7 @@ const getPokemonsByIdOrName = async (idOrName) => {
     showPokemonData(response);
     getType();
   } catch (error) {
-    // coolAlert()
-    alert("hey bud this pokemon doesn't exist.... try another one");
+    errorAlert("Oh no!","hey bud this pokemon doesn't exist.... try another one");
     console.error(error);
   }
 };  
@@ -33,12 +32,9 @@ const getPokemonsByIdOrName = async (idOrName) => {
     async function getPokemonByNameOrId(idOrName){
       let response  
       if(!isNaN(idOrName))
-      // response = await axios.get(`${baseUrl}/pokemon/get/${idOrName}`);
       response = await axiosRequest('get',`pokemon/get/${idOrName}`,'a');
       else 
-      // response = await axios.get(`${baseUrl}/pokemon/query?name=${idOrName}`);
       response = await axiosRequest('get',`pokemon/query?name=${idOrName}`,'a');
-      console.log(response);
       return response
     }
 
@@ -53,7 +49,6 @@ const getPokemonsByIdOrName = async (idOrName) => {
       }
       function changeToBackDefaultOnHover(recievedData) {
         //Make the image change to back_default on hover
-        console.log(recievedData);
         pokeImg.src = recievedData.front_pic;
         pokeImg.onmouseenter = function () {
           pokeImg.src = recievedData.back_pic;
@@ -113,54 +108,53 @@ const getPokemonsByIdOrName = async (idOrName) => {
 
       catchButton.onclick = async ()=>{
       if(document.getElementById('connect').textContent === ''){//then you cant catch
-      alert("you can't catch pokemons if you aren't logged in")
+      errorAlert("Nice try!","you can't catch pokemons if you aren't logged in")
       return
       }
       if(pokeNameVal.textContent === ''){
-      alert('you must search some pokemon to catch one')
+      errorAlert("Oops",'you must search some pokemon to catch one')
       return
       }
       const pokemonId = pokeId.textContent
       const userName =  document.getElementById('connect').textContent.split('').splice(14).join('')
       const response =  await axiosRequest('put',`pokemon/catch/${pokemonId}`,userName)
       if(!response)
-      alert('Pokemon already caught')
+      errorAlert("You can't do that😥",'Pokemon already caught')
       else
-      alert(response)
+      pokemonCatchedAlert(response)
     }
 
 
 
-      releaseButton.onclick = async ()=>{
-        if(document.getElementById('connect').textContent === ''){//then you cant catch
-        alert("you can't catch pokemons if you aren't logged in")
+      releaseButton.onclick = async ()=>{ //handle catch button
+        if(document.getElementById('connect').textContent === ''){
+        errorAlert('Oops',"you can't catch pokemons if you aren't logged in")
         return
         }
         const pokemonId = pokeId.textContent
         const userName =  document.getElementById('connect').textContent.split('').splice(14).join('')
         const response =  await axiosRequest('delete',`pokemon/release/${pokemonId}`,userName) 
         if(!response)
-        alert("you can't release pokemon you didn't caught")
+        errorAlert('Oops',"you can't release pokemon you didn't caught")
         else
-        alert(response)
+        pokemonReleaseAlert(response)
         }
 
 
-      signInButton.onclick = async ()=>{//for sign up to web
+      signInButton.onclick = async ()=>{//handle sign up button
       window.scrollTo(-500,0);
         const userNameVal = userNameSignIn.value
         if(!userNameVal){
-          alert('type something...')
+          errorAlert('No content!','type something...')
           return
           }
-          const response =  await axiosRequest('get','users/info/login',userNameVal) // users/
-          // console.log(response);
+          const response =  await axiosRequest('get','users/info/login',userNameVal) 
           if(response){//if there is such username
-            alert('you just logged in try to catch some pokemons!')
+            niceAlert('you logged in, try to catch some pokemons!')
             connected(userNameVal)//show the connected sign
           }
           else{
-          alert("your username doesn't exsist, click the link below to sign up!")
+          errorAlert('No content!',"your username doesn't exsist, click the link below to sign up!")
           document.getElementById('connect').textContent = ''
           }
       }
@@ -186,7 +180,6 @@ const getPokemonsByIdOrName = async (idOrName) => {
               });
               return response.data
             } catch (e) {
-              console.log(e);;
             }
           }
 
@@ -194,11 +187,74 @@ const getPokemonsByIdOrName = async (idOrName) => {
        signUpButton.onclick = async ()=>{//for sign up to web
         const userNameVal = userNameSignUp.value
         if(!userNameVal){
-        alert('type something...')
+          errorAlert('No content!','type something...')
         return
         }
-      const response =  await axiosRequest('post','users/info',userNameVal) // users/ 
-      alert(response)
+      const response =  await axiosRequest('post','users/info',userNameVal)  
+      niceAlert(response)
       }
 
+
+       caughtPokes.onclick = async ()=>{//for sign up to web
+        const userName = document.getElementById('connect').textContent.split('').splice(14).join('')
+        showUserPokes.textContent = ''
+        if(userName === '' || userName === undefined){
+          errorAlert('Oops','you must sign in in order to see your pokemons')
+          return
+        }
+        const pokemonsArray =  await axiosRequest('get','pokemon/',userName)
+        showUserPokes.style.color = 'white'
+        showUserPokes.textContent = pokemonsArray.join(' | ')
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////-- Alerts messeges  --///////////////////////////////////////////////////////
      
+      const errorAlert  = (titleVal,textVal) =>{
+        Swal.fire({
+            icon: 'error',
+            title: titleVal,
+            text: textVal,
+          })
+        }
+      const pokemonCatchedAlert = (textVal) =>{
+        Swal.fire({
+          title: 'Nice!',
+          text: textVal,
+          imageUrl: 'images/pokemonCatched.gif',
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: 'Custom image',
+        })
+        }
+      const pokemonReleaseAlert =(textVal) =>{
+        Swal.fire({
+          title: 'Ohhh!',
+          text: textVal,
+          imageUrl: 'images/pokemonRelease.gif',
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: 'Custom image',
+        })
+        }
+      const niceAlert  = (textVal) =>{
+        Swal.fire({
+          title: textVal,
+          width: 600,
+          padding: '3em',
+        })
+        }
+
+
