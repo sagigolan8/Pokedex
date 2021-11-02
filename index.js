@@ -73,9 +73,7 @@ const getPokemonsByIdOrName = async (idOrName) => {
             .replaceAll(" ", "");
           const response = await axios.get(`${baseUrl}/type/${typeText}`);
           renderPokemonsToDom(response.data.pokemon);
-          document
-            .getElementById("related-pokemons")
-            .addEventListener("click", (e) => {
+          document.getElementById("related-pokemons").addEventListener("click", (e) => {
               e.stopImmediatePropagation();
               userText.value = e.target.textContent;
               getPokemonsByIdOrName(e.target.textContent);
@@ -141,7 +139,15 @@ const getPokemonsByIdOrName = async (idOrName) => {
         }
 
 
-      signInButton.onclick = async ()=>{//handle sign up button
+
+      signInButton.addEventListener('click', ()=>{
+        handleSignIn()
+      })
+      userNameSignIn.addEventListener('keydown', (e)=>{
+      if (e.key === "Enter") 
+      handleSignIn()
+    })
+      const handleSignIn = async ()=>{//handle sign up button
       window.scrollTo(-500,0);
         const userNameVal = userNameSignIn.value
         if(!userNameVal){
@@ -184,7 +190,15 @@ const getPokemonsByIdOrName = async (idOrName) => {
           }
 
 
-       signUpButton.onclick = async ()=>{//for sign up to web
+
+        signUpButton.addEventListener('click', ()=>{
+        handleSignUp()
+        })
+        userNameSignUp.addEventListener('keydown', (e)=>{
+        if (e.key === "Enter") 
+        handleSignUp()
+        })
+       const handleSignUp = async ()=>{//for sign up to web
         const userNameVal = userNameSignUp.value
         if(!userNameVal){
           errorAlert('No content!','type something...')
